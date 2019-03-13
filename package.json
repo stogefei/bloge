@@ -1,7 +1,7 @@
 {
   "name": "reac-blog",
   "version": "0.1.1",
-  "homepage": "https://stogefei.github.io/blogs",
+  "homepage": "https://stogefei.github.io/bloge",
   "private": true,
   "dependencies": {
     "gh-pages": "^2.0.1",

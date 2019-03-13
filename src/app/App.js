@@ -2,23 +2,23 @@ import React, { Component } from 'react';
 import './App.scss';
 import { Input, Button, List  } from 'antd';
 import store from '../store'
-const data = [
-  'Racing car sprays burning fuel into crowd.',
-  'Japanese princess to wed commoner.',
-  'Australian walks 100km after outback crash.',
-  'Man charged over missing wedding girl.',
-  'Los Angeles battles huge wildfires.',
-];
+
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = store.getState()
-    console.log(store.getState())
+
+    console.log(this.state, 'this.state')
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleStoreChange = this.handleStoreChange.bind(this)
+    store.subscribe(this.handleStoreChange)
   }
   render() {
     return (
       <div className="App">
-        <Input placeholder="Basic usage" value={this.state.inputValue} style={{'width':300}} />
+        <Input placeholder="Basic usage" 
+        onChange={this.handleInputChange}
+        value={this.state.inputValue} style={{'width':300}} />
         <Button type="primary">提交</Button>
         <List
         style={{"marginTop": 30}}
@@ -28,6 +28,18 @@ class App extends Component {
         />
       </div>
     );
+  }
+  handleInputChange(e) {
+    const action = {
+      type: 'change_input_value',
+      value: e.target.value
+    }
+    store.dispatch(action)
+    // console.log(e.target.value)
+  }
+  handleStoreChange() {
+    // console.log(store.getState())
+    this.setState(store.getState())
   }
 }
 

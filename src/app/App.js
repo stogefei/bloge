@@ -1,66 +1,98 @@
 import React, { Component } from 'react';
 import './App.scss';
-import { Input, Button, List  } from 'antd';
-import store from '../store'
-import {ChangeInputValue, AddList, DeleteList} from '../store/actionTypes'
+// import { Input, Button, List  } from 'antd';
+import { Layout, Menu, List, Avatar, Icon } from 'antd';
 
+const { Header, Footer, Content } = Layout;
+
+const listData = [];
+for (let i = 0; i < 23; i++) {
+  listData.push({
+    href: 'http://ant.design',
+    title: `ant design part ${i}`,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    description:
+      'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+    content:
+      'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+  });
+}
+
+const IconText = ({ type, text }) => (
+  <span>
+    <Icon type={type} style={{ marginRight: 8 }} />
+    {text}
+  </span>
+);
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = store.getState()
-
-    console.log(this.state, 'this.state')
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleStoreChange = this.handleStoreChange.bind(this)
-    this.handleDelete = this.handleDelete.bind(this)
-    this.handleSumt = this.handleSumt.bind(this)
-    store.subscribe(this.handleStoreChange)
+    console.log(props, 'this.props')
   }
+  
   render() {
     return (
       <div className="App">
-        <Input placeholder="Basic usage" 
-        onChange={this.handleInputChange}
-        value={this.state.inputValue} style={{'width':300}} />
-        <Button type="primary" onClick={this.handleSumt}>提交</Button>
-        <List
-         style={{"marginTop": 30}}
-          bordered
-          dataSource={this.state.list}
-          renderItem={item => (<List.Item onClick={e => {  this.handleDelete(item) }}>{item}</List.Item>)}
-        />
+        <Layout className="layout">
+          <Header>
+          <div className="logo">north</div>
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            defaultSelectedKeys={['1']}
+            style={{ lineHeight: '64px' }}
+          >
+            <Menu.Item key="1">nav 1</Menu.Item>
+            <Menu.Item key="2">nav 2</Menu.Item>
+            <Menu.Item key="3">nav 3</Menu.Item>
+          </Menu>
+          </Header>
+          <Content>
+          <List
+          itemLayout="vertical"
+          size="large"
+          pagination={{
+            onChange: page => {
+              console.log(page);
+            },
+            pageSize: 3,
+          }}
+          dataSource={listData}
+          // footer={
+          //   <div>
+          //     <b>ant design</b> footer part
+          //   </div>
+          // }
+          renderItem={item => (
+            <List.Item
+              key={item.title}
+              actions={[
+                <IconText type="star-o" text="156" />,
+                <IconText type="like-o" text="156" />,
+                <IconText type="message" text="2" />,
+              ]}
+              extra={
+                <img
+                  width={272}
+                  alt="logo"
+                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                />
+              }
+            >
+              <List.Item.Meta
+                avatar={<Avatar src={item.avatar} />}
+                title={<a href={item.href}>{item.title}</a>}
+                description={item.description}
+              />
+              {item.content}
+            </List.Item>
+          )}
+  />
+          </Content>
+          <Footer>Footer</Footer>
+        </Layout>
       </div>
     );
-  }
-
-  handleInputChange(e) {
-    const action = {
-      type: ChangeInputValue,
-      value: e.target.value
-    }
-    store.dispatch(action)
-    // console.log(e.target.value)
-  }
-
-  handleStoreChange() {
-    // console.log(store.getState())
-    this.setState(store.getState())
-  }
-
-  handleSumt() {
-    const action = {
-      type: AddList,
-      value: store.getState().inputValue
-    }
-    store.dispatch(action)
-  }
-  handleDelete(e) {
-    console.log(e)
-    const action = {
-      type: DeleteList,
-      value: e
-    }
-    store.dispatch(action)
   }
 }
 
